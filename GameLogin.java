@@ -1,4 +1,4 @@
-import javax.swing.*;
+import javax.swing.*; lani rumkota
 import java.awt.*;
 import java.awt.event.*;
 
