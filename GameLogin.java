@@ -1,4 +1,4 @@
-import javax.swing.*;hari_selasa
+import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 
