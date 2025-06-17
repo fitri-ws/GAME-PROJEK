@@ -1,61 +1,68 @@
-from collections import Counter
-import itertools
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
 
-# Frekuensi huruf umum bahasa Inggris
-english_freq_orders = [
-    "ETAOINSHRDLCUMWFGYPBVKJXQZ",  # Standard
-    "EARIOTNSLCUDPMHGBFYWKVXZJQ",  # Alternative 1
-    "ETAOINSRHDLUCMFYWGPBVKXJQZ",  # Alternative 2
-]
+public class GameLogin extends JFrame {
+    private JTextField txtUsername;
+    private JPasswordField txtPassword;
+    private JButton btnLogin;
 
-def analyze_frequencies(text):
-    text = text.upper()
-    letters_only = [c for c in text if c.isalpha()]
-    freq = Counter(letters_only)
-    sorted_freq = [item[0] for item in freq.most_common()]
-    return sorted_freq, freq
+    public GameLogin() {
+        super("Login Tic Tac Toe");
+        setSize(350, 200);
+        setDefaultCloseOperation(EXIT_ON_CLOSE);
+        setLocationRelativeTo(null);
+        setLayout(new GridBagLayout());
+        getContentPane().setBackground(new Color(54, 57, 63));
 
-def decrypt_with_mapping(text, mapping):
-    result = ""
-    for char in text:
-        if char.upper() in mapping:
-            subst = mapping[char.upper()]
-            result += subst.lower() if char.islower() else subst
-        else:
-            result += char
-    return result
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(8,8,8,8);
+        gbc.fill = GridBagConstraints.HORIZONTAL;
 
-def generate_decryption_attempts(ciphertext, freq_orders):
-    sorted_freq, freq_count = analyze_frequencies(ciphertext)
-    attempts = []
+        JLabel lblUser = new JLabel("Username:");
+        lblUser.setForeground(Color.WHITE);
+        gbc.gridx = 0; gbc.gridy = 0;
+        add(lblUser, gbc);
 
-    print("=== Frekuensi Huruf dalam Ciphertext ===")
-    for letter, count in freq_count.items():
-        print(f"{letter}: {count}")
-    print("\n")
+        txtUsername = new JTextField(15);
+        gbc.gridx = 1; gbc.gridy = 0;
+        add(txtUsername, gbc);
 
-    for idx, order in enumerate(freq_orders):
-        mapping = {}
-        for i in range(min(len(sorted_freq), len(order))):
-            mapping[sorted_freq[i]] = order[i]
-        decrypted = decrypt_with_mapping(ciphertext, mapping)
-        attempts.append((idx + 1, decrypted, mapping))
-    
-    return attempts
+        JLabel lblPass = new JLabel("Password:");
+        lblPass.setForeground(Color.WHITE);
+        gbc.gridx = 0; gbc.gridy = 1;
+        add(lblPass, gbc);
 
-# Ciphertext contoh
-ciphertext = "YMJ VZNHP GWTBS KTC OZRUX TAJW YMJ QFED ITL"
+        txtPassword = new JPasswordField(15);
+        gbc.gridx = 1; gbc.gridy = 1;
+        add(txtPassword, gbc);
 
-# Lakukan analisis dan tampilkan alternatif hasil
-attempts = generate_decryption_attempts(ciphertext, english_freq_orders)
+        btnLogin = new JButton("Login");
+        gbc.gridx = 0; gbc.gridy = 2; gbc.gridwidth = 2;
+        add(btnLogin, gbc);
 
-# Tampilkan semua hasil
-for idx, text, mapping in attempts:
-    print(f"=== Alternatif #{idx} ===")
-    print("Mapping digunakan:")
-    print(mapping)
-    print("\nHasil dekripsi:")
-    print(text)
-    print("\n")
-    
+        btnLogin.addActionListener(e -> attemptLogin());
+    }
 
+    private void attemptLogin() {
+        String user = txtUsername.getText();
+        String pass = new String(txtPassword.getPassword());
+
+        // Contoh validasi sederhana (user: admin, pass: admin)
+        if(user.equals("admin") && pass.equals("admin")) {
+            JOptionPane.showMessageDialog(this, "Login berhasil!");
+            MainMenu mainMenu = new MainMenu();
+            mainMenu.setVisible(true);
+            this.dispose();
+        } else {
+            JOptionPane.showMessageDialog(this, "Username atau password salah!");
+        }
+    }
+
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(() -> {
+            GameLogin login = new GameLogin();
+            login.setVisible(true);
+        });
+    }
+}
